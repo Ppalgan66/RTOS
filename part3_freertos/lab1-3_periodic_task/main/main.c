@@ -47,7 +47,7 @@
 
 #define TASK_DELAY
 
-//#define PERIODIC_TASK_DELAY
+#define PERIODIC_TASK_DELAY
 
 /**************************************/
 /**************************************/
@@ -161,10 +161,12 @@ void vTaskFunction(void *pvParameters) {
 	char *pcTaskName;
 	volatile uint32_t ul;
 
+	TickType_t xLastWakeTime;
 	/* The string to print out is passed in via the parameter.  Cast this to a
 	character pointer. */
 	pcTaskName = (char *)pvParameters;
-
+	
+	xLastWakeTime = xTaskGetTickCount(); 
 	DISPLAY("Start of %s task, priority = %d",pcTaskName, uxTaskPriorityGet(NULL));
 
 	/* As per most tasks, this task is implemented in an infinite loop. */
@@ -177,7 +179,13 @@ void vTaskFunction(void *pvParameters) {
 
 		// To run APP_MAIN TASK
 		#ifdef TASK_DELAY
-
+			#ifdef PERIODIC_TASK_DELAY
+				DISPLAY ( " Periodic Delay of %s " , pcTaskName );
+				vTaskDelayUntil (&xLastWakeTime , pdMS_TO_TICKS(300) );
+			# else
+				DISPLAY ( " Approximated Delay of %s " , pcTaskName ) ;
+				vTaskDelay ( pdMS_TO_TICKS(300) ) ;
+			# endif
 		//	DISPLAY("Delay of %s", pcTaskName);
 		//	vTaskDelay(400 / portTICK_PERIOD_MS);
 		#endif
