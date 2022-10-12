@@ -20,6 +20,7 @@ static const uint32_t T1_PRIO = 5;
 static const uint32_t T2_PRIO = 5;
 static const uint32_t T3_PRIO = 5;
 
+static const char* TAG= "MsgTimeOut";
 
 /**
  * @brief Starting point function
@@ -116,7 +117,9 @@ void vTaskFunction2(void *pvParameters) {
 	char *pcTaskName;
 	volatile uint32_t ul;
 	int32_t lReceivedValue;
-	BaseType_t xStatus;
+	
+	
+	//BaseType_t xStatus;
 	/* The string to print out is passed in via the parameter.  Cast this to a
 	character pointer. */
 	pcTaskName = (char *)pvParameters;
@@ -131,8 +134,16 @@ void vTaskFunction2(void *pvParameters) {
 		/* Delay for simulating a computation */
 		for (ul = 0; ul < mainDELAY_LOOP_COUNT; ul++){		
 		}
+		if (xQueueReceive(xQueue1,&lReceivedValue,portMAX_DELAY)){
+			DISPLAYI(TAG,"task 2,mess=%d", lReceivedValue);
+			COMPUTE_IN_TIME_MS(30);
+		}
+		else{
+			DISPLAYE(TAG,"task 2,timeout !" );
+			COMPUTE_IN_TIME_MS(10);
+		}
 
-		// Post
+/*		// Post
 		 xStatus = xQueueReceive(xQueue1,&lReceivedValue,portMAX_DELAY);
 		// Check result
 		if ( xStatus == errQUEUE_FULL ){
@@ -141,6 +152,7 @@ void vTaskFunction2(void *pvParameters) {
 		DISPLAY("value received : %d", lReceivedValue);
 		// Compute time : 4 ticks or 40 ms
 		COMPUTE_IN_TICK (3) ;
+*/
 
 
 		DISPLAY("End of %s", pcTaskName);
