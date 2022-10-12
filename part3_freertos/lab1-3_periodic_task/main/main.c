@@ -90,7 +90,7 @@ static char buffer[40*12];
 #endif
 
 /* Used as a loop counter to create a very crude delay. */
-#define mainDELAY_LOOP_COUNT	(0xFFFFF)
+#define mainDELAY_LOOP_COUNT	(0x7FFFF)
 
 /* The task function. */
 void vTaskFunction(void *pvParameters);
