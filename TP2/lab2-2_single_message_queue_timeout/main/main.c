@@ -133,16 +133,16 @@ void vTaskFunction2(void *pvParameters) {
 
 		/* Delay for simulating a computation */
 		for (ul = 0; ul < mainDELAY_LOOP_COUNT; ul++){		
+			
+			if (xQueueReceive(xQueue1,&lReceivedValue,pdMS_TO_TICKS (300))){
+				DISPLAYI(TAG,"task 2,mess=%d", lReceivedValue);
+				COMPUTE_IN_TIME_MS(30);
+			}	
+			else{
+				DISPLAYE(TAG,"task 2,timeout !" );
+				COMPUTE_IN_TIME_MS(10);
+			}	
 		}
-		if (xQueueReceive(xQueue1,&lReceivedValue,portMAX_DELAY)){
-			DISPLAYI(TAG,"task 2,mess=%d", lReceivedValue);
-			COMPUTE_IN_TIME_MS(30);
-		}
-		else{
-			DISPLAYE(TAG,"task 2,timeout !" );
-			COMPUTE_IN_TIME_MS(10);
-		}
-
 /*		// Post
 		 xStatus = xQueueReceive(xQueue1,&lReceivedValue,portMAX_DELAY);
 		// Check result
